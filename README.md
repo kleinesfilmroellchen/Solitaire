@@ -1,0 +1,5 @@
+# Solitaire
+Solitaire in p5.js with HTML/CSS
+
+View as page:
+https://rawgit.com/kleinesfilmroellchen/Solitaire/master/index.html
