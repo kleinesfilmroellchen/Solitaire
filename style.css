@@ -1,0 +1,44 @@
+body {
+   background-color: rgb(250, 216, 95);
+   color: rgb(148, 0, 0);
+   font-family: "Candara", "Calibri", Arial, sans-serif;
+   font-size: 15pt;
+   font-weight: normal;
+}
+
+h1 {
+   font-stretch: semi-expanded;
+   font-size: 200%;
+   font-weight: 800;
+   background-color: rgb(120, 215, 129);
+}
+
+h3 {
+   font-size: 130%;
+   font-weight: bold;
+}
+
+h4 {
+   font-size: 120%;
+   font-weight: 300;
+   color: rgb(16, 40, 65);
+}
+
+h6 {
+   font-size: 60%;
+   font-weight: 100;
+}
+
+em {
+   font-style: italic;
+   font-weight: inherit;
+}
+
+strong {
+   color: rgb(30, 60, 31);
+   font-weight: 700;
+}
+
+#win {
+   font-size: 150%;
+}

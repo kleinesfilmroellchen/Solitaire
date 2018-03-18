@@ -1,0 +1,19 @@
+{
+	"e stack remove": "Argumentfehler: Anzahl muss eine natürliche Zahl sein, ist aber ",
+	"e stack add": "Argumentfehler: Das Argument von Stack.add() muss ein Array oder ein 'Card'-Objekt sein",
+
+	"jack": "Bube",
+	"king": "König",
+	"queen": "Dame",
+	"ace": "Ass",
+	"jack-short": "B",
+	"king-short": "K",
+	"queen-short": "D",
+	"ace-short": "A",
+
+	"tease": "<i>Das solltest du kennen, oder?</i>",
+	"explanation": "Ok, anscheinend nicht. Lass mich erklären...",
+	"by": "Von",
+	"game-name": "Solitär",
+	"win": "<strong>Du hast gewonnen!</strong> Lade die Seite erneut, um das Spiel nochmal zu spielen."
+}

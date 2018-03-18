@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<meta charset="utf-8">
+		<meta name="author" content="Manuel Bertsch">
+		<link rel="icon" href="favicon.ico" type="image/x-icon"/>
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+		<title class="game-name">Solitaire</title>
+		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.dom.min.js" charset="utf-8"></script>-->
+		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.sound.min.js" charset="utf-8"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.min.js" charset="utf-8"></script>
+	  	<script type="text/javascript" src="constants.js"></script>
+	  	<script type="text/javascript" src="animation.js"></script>
+  		<script type="text/javascript" src="card.js"></script>
+		<script type="text/javascript" src="stack.js"></script>
+    	<script type="text/javascript" src="sketch.js"></script>
+		<link href="style.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+		<h1 class="game-name">Solitaire</h1>
+		<h6><span id="by">By</span> <em>kleines filmröllchen</em></h6>
+		<!-- The onClick event hides this paragraph and unhides the "explanation" paragraph-->
+		<p onclick="document.getElementById('explanation').hidden = false; this.hidden = true;" id="tease"><i>You should know that, right?</i></p>
+		<p id="explanation" hidden="true" onclick="document.getElementById('tease').hidden = false; this.hidden = true;">
+			Ok, apparently you don't. Let me explain...<br>
+			</p>
+		<p id="win" hidden="true">You won!</p>
+  </body>
+</html>
