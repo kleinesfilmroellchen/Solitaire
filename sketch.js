@@ -99,8 +99,7 @@ function setup() {
 
 	//preparate final stacks
 	finalStacks = finalStacks.map(e => {
-		let stack = new Stack([new Card(12, cCol.DIAMONDS)]);
-		stack.cards[0].isVisible = true;
+		let stack = new Stack([]);
 		stack.onlyTopCard = true;
 		return stack;
 	});
