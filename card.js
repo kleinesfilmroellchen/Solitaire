@@ -5,6 +5,69 @@ class Card {
 		this.color = col;
 		this.isVisible = false;
 		this.animation = null;
+		this.normalBuffer = createGraphics(CARD_SIZE, CARD_SIZE * 1.5);
+
+		//draw preparation
+		this.normalBuffer.angleMode(DEGREES);
+		this.normalBuffer.background(0, 0);
+		//draw background rectangle
+		this.normalBuffer.fill(255);
+		this.normalBuffer.stroke(0);
+		this.normalBuffer.strokeWeight(4);
+		this.normalBuffer.rectMode(CORNERS);
+		this.normalBuffer.rect(0, 0, CARD_SIZE, CARD_SIZE * 1.5, CORNER_SIZE, CORNER_SIZE, CORNER_SIZE, CORNER_SIZE);
+
+		//set drawing color
+		this.normalBuffer.textAlign(CENTER, CENTER);
+		this.normalBuffer.textSize(50);
+		this.normalBuffer.strokeWeight(1);
+		switch (this.color) {
+			case cCol.DIAMONDS:
+			case cCol.HEARTS:
+				this.normalBuffer.fill(255, 0, 0);
+				this.normalBuffer.stroke(225, 0, 0);
+				break;
+
+			case cCol.CLUBS:
+			case cCol.SPADES:
+				this.normalBuffer.stroke(0, 0, 0);
+				this.normalBuffer.fill(0, 0, 0);
+				break;
+		}
+
+		//Draw symbols: lucky for us, there are unicode symbols for the colors!
+		let symbol = "";
+		switch (this.color) {
+			case cCol.DIAMONDS:
+				symbol = "♦";
+				break;
+			case cCol.HEARTS:
+				symbol = "♥";
+				break;
+			case cCol.CLUBS:
+				symbol = "♣"
+				break;
+			case cCol.SPADES:
+				symbol = "♠";
+				break;
+		}
+		//draw actual symbol text
+		this.normalBuffer.text(symbol, CARD_SIZE / 2, 1 / 2 * 1.5 * CARD_SIZE);
+
+		//Value
+		let valueText = valToString(this.value);
+
+		this.normalBuffer.textAlign(RIGHT, TOP);
+		this.normalBuffer.textSize(16);
+
+		//right top text
+		this.normalBuffer.text(valueText, CARD_SIZE - 4, 2);
+
+		//bottom left text
+		this.normalBuffer.translate(0, CARD_SIZE * 1.5);
+		this.normalBuffer.rotate(180);
+		this.normalBuffer.textAlign(RIGHT, TOP);
+		this.normalBuffer.text(valueText, -4, 2);
 	}
 
 	//Draws itself from current (0|0)
@@ -16,93 +79,13 @@ class Card {
 			translate(this.animation.currentPos.x, this.animation.currentPos.y);
 		}
 
-		push();
-		//draw background rectangle
-		fill(255);
-		stroke(0);
-		//thicker stroke if not visible
-		strokeWeight(this.isVisible ? 1 : 2);
-		rectMode(CORNERS);
-		rect(0, 0, CARD_SIZE, CARD_SIZE * 1.5, CORNER_SIZE, CORNER_SIZE, CORNER_SIZE, CORNER_SIZE);
-
-		if (!this.isVisible) {
-			strokeWeight(1);
-			//draw a stripe pattern to indicate backside
-			for (let position = 0; position <= CARD_SIZE * 2.5; position += STRIPE_SPACING) {
-				//clip to card
-				let x = Math.min(position, CARD_SIZE);
-				let y = Math.min(position, CARD_SIZE * 1.5);
-				line(x, position - x, position - y, y);
-			}
-			//prevent front side drawing
-			return;
+		//draw buffers on screen using image
+		if (this.isVisible) {
+			image(this.normalBuffer, 0, 0);
+		} else {
+			//invisible buffer is global
+			image(invisibleBuffer, 0, 0);
 		}
-
-		//set drawing color
-		switch (this.color) {
-			case cCol.DIAMONDS:
-			case cCol.HEARTS:
-				fill(255, 0, 0);
-				stroke(225, 0, 0);
-				break;
-
-			case cCol.CLUBS:
-			case cCol.CROSSES:
-				stroke(0, 0, 0);
-				fill(0, 0, 0);
-				break;
-		}
-
-		//Draw symbols
-		strokeWeight(1);
-		switch (this.color) {
-			case cCol.DIAMONDS:
-				beginShape();
-				vertex(0.5 * CARD_SIZE, (1 / 3 * 1.5) * CARD_SIZE);
-				vertex(2 / 3 * CARD_SIZE, 0.5 * 1.5 * CARD_SIZE);
-				vertex(0.5 * CARD_SIZE, (2 / 3 * 1.5) * CARD_SIZE);
-				vertex(1 / 3 * CARD_SIZE, 0.5 * 1.5 * CARD_SIZE);
-				endShape(CLOSE);
-				break;
-			case cCol.HEARTS:
-				beginShape();
-				vertex(1 / 3 * CARD_SIZE, (1 / 3 * 1.5) * CARD_SIZE);
-				vertex(2 / 3 * CARD_SIZE, (1 / 3 * 1.5) * CARD_SIZE);
-				vertex(0.5 * CARD_SIZE, (2 / 3 * 1.5) * CARD_SIZE);
-				endShape(CLOSE);
-				break;
-			case cCol.CLUBS:
-				rectMode(CENTER);
-				rect(0.5 * CARD_SIZE, 0.5 * 1.5 * CARD_SIZE, 0.1 * CARD_SIZE, 0.25 * CARD_SIZE);
-				beginShape();
-				vertex(0.5 * CARD_SIZE, 0.25 * 1.5 * CARD_SIZE);
-				vertex(2 / 3 * CARD_SIZE, 0.5 * 1.5 * CARD_SIZE);
-				vertex(1 / 3 * CARD_SIZE, 0.5 * 1.5 * CARD_SIZE);
-				endShape(CLOSE);
-				break;
-			case cCol.CROSSES:
-				rectMode(CENTER);
-				rect(0.5 * CARD_SIZE, 1.5 * 0.5 * CARD_SIZE, 1 / 6 * CARD_SIZE, 1 / 3 * 1.5 * CARD_SIZE);
-				rect(0.5 * CARD_SIZE, 1.5 * 0.5 * CARD_SIZE, 1 / 3 * 1.5 * CARD_SIZE, 1 / 6 * CARD_SIZE);
-				break;
-		}
-
-		//Value
-		let valueText = valToString(this.value);
-
-		//right top text
-		textAlign(RIGHT, TOP);
-		text(valueText, CARD_SIZE - 2, 2);
-
-		//bottom left text
-		push();
-		translate(0, CARD_SIZE * 1.5);
-		rotate(180);
-		textAlign(RIGHT, TOP);
-		text(valueText, -2, 0);
-		pop();
-
-		pop();
 
 		if (this.animation) {
 			pop();

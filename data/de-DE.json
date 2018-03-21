@@ -1,6 +1,7 @@
 {
 	"e stack remove": "Argumentfehler: Anzahl muss eine natürliche Zahl sein, ist aber ",
 	"e stack add": "Argumentfehler: Das Argument von Stack.add() muss ein Array oder ein 'Card'-Objekt sein",
+	"w stack remove": "Es wurde versucht, mehr Elemente vom Stapel zu entfernen, als es Elemente im Stapel gab. Ist dies ein Fehler? remove() wurde aufgerufen mit count = ",
 
 	"jack": "Bube",
 	"king": "König",
@@ -12,7 +13,7 @@
 	"ace-short": "A",
 
 	"tease": "<i>Das solltest du kennen, oder?</i>",
-	"explanation": "Ok, anscheinend nicht. Lass mich erklären...",
+	"explanation": "Ok, anscheinend nicht. Lass mich erklären...<br>Solitär (oder Solitaire oder Klondike) wird mit einem klassischen Canasta/Bridge- 52-Karten-Blatt gespielt. Die Karten haben Werte von 2 bis 10 und Bube, Dame, König, Ass (in dieser Reihenfolge aufsteigend). Die Farben sind Kreuz und Pik (schwarz) sowie Karo und Herz (rot). Dein Ziel ist es, die Karten nach Farbe geordnet aufsteigend auf den vier Endstapeln abzulegen.<br>Dir stehen sieben 'Arbeitsstapel' zur Verfügung, deren Startkarten-Anzahl nach rechts zunimmt. Alle anderen Karten sind auf einem Nachzugsstapel in der linken oberen Ecke.<br>Du kannst umgedrehte Karten auf den Arbeitsstapeln durch Klicken umdrehen und <b>immer drei Karten auf einmal</b> vom Nachzugsstapel auf den Ablagestapel ziehen. Außerdem kannst du offene Karten durch Klicken und Ziehen nehmen (kann manchmal etwas schwer sein...). Du kannst offene Karten auf Arbeitsstapel legen, aber dafür gelten einige Regeln:<br><ul><li>Es können keine Karten auf umgedrehte Karten gelegt werden.</li><li>Karten, die aufeinander liegen, müssen unterschiedliche Farben haben, und mit Farben meine ich hier rot oder schwarz.</li><li>Eine Karte, die auf einer anderen liegt, muss einen Wert darunter liegen, also liegen Karten mit höheren Werten weiter hinten im Stapel.</li><li>Auf leere Arbeitsstapel dürfen nur Könige gelegt werden.</li></ul>Falls mehrere offene Karten aufeinander liegen, die diese Regeln befolgen, können diese Karten gemeinsam bewegt werden.<br>Falls der Nachzugsstapel leer geht, kannst du auf ihn erneut klicken, um die Karten vom Ablagestapel umzudrehen und wieder auf den Nachzugsstapel zu legen.<br>Es ist nicht ungewöhnlich, dass du eine Runde Solitär nicht gewinnst. Da jedes Spiel zufällig ist, kannst du sogar mit guter oder perfekter Spielstrategie nur etwa 43% der Spiele gewinnen.<br>Viel Glück!",
 	"by": "Von",
 	"game-name": "Solitär",
 	"win": "<strong>Du hast gewonnen!</strong> Lade die Seite erneut, um das Spiel nochmal zu spielen."

@@ -5,7 +5,7 @@ const CARD_SIZE = 70;
 //Spacing in between the cards
 const CARD_SPACING = CARD_SIZE / 8;
 //Round corner size of the cards
-const CORNER_SIZE = 3;
+const CORNER_SIZE = 5;
 //Stripe spacing. Increase to make stripes more separate
 //Non-divisibles of the card size are recommended
 const STRIPE_SPACING = 11;
@@ -16,7 +16,7 @@ const FINAL_POS = CARD_SIZE * 3;
 const STACK_COUNT = 7;
 
 //time in milliseconds an animation takes
-const ANIMATION_TIME = 1500;
+const ANIMATION_TIME = 500;
 
 //loader for language: searches for any languages in the language information fields provided in navigator
 const loadLang = () => supportedLocales.includes(navigator.userLanguage ||
@@ -39,7 +39,7 @@ const cCol = {
 	DIAMONDS: Symbol("Diamonds"),
 	CLUBS: Symbol("Clubs"),
 	HEARTS: Symbol("Hearts"),
-	CROSSES: Symbol("Crosses"),
+	SPADES: Symbol("Crosses"),
 }
 
 //for mouse presses

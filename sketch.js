@@ -1,4 +1,11 @@
-//Solitaire (obviously)
+/** Solitaire (obviously)
+ *
+ * By kleinesfilmröllchen
+ * Enjoy reading throug this ES6 mess!
+ */
+
+//Buffer for "invisible" cards
+let invisibleBuffer;
 
 //The stacks that are used temporarily
 const stacks = new Array(STACK_COUNT);
@@ -50,6 +57,25 @@ function setup() {
 	workingStackStartY = CARD_SIZE * 1.5 + CARD_SPACING * 2;
 
 	angleMode(DEGREES);
+
+	////prepare invisible buffer
+	invisibleBuffer = createGraphics(CARD_SIZE, CARD_SIZE * 1.5);
+	invisibleBuffer.background(0, 0);
+	//card rectangle
+	invisibleBuffer.fill(255);
+	invisibleBuffer.stroke(0);
+	invisibleBuffer.strokeWeight(4);
+	invisibleBuffer.rectMode(CORNERS);
+	invisibleBuffer.rect(0, 0, CARD_SIZE, CARD_SIZE * 1.5, CORNER_SIZE, CORNER_SIZE, CORNER_SIZE, CORNER_SIZE);
+	invisibleBuffer.strokeWeight(1);
+	//draw a stripe pattern to indicate backside
+	for (let position = 0; position <= CARD_SIZE * 2.5; position += STRIPE_SPACING) {
+		//clip to card
+		let x = Math.min(position, CARD_SIZE);
+		let y = Math.min(position, CARD_SIZE * 1.5);
+		invisibleBuffer.line(x, position - x, position - y, y);
+	}
+
 	// Setup Stacks
 
 	//All options for cards
@@ -120,7 +146,6 @@ setInterval(mouseCheck, 40);
 function draw() {
 	//calculate elapsed time
 	let elapsedTime = millis() - lastTime;
-	frameRate(30);
 
 	//nice modern Solitaire-blue
 	background(26, 104, 222);
@@ -150,6 +175,8 @@ function draw() {
 		stack.draw(elapsedTime);
 		//translate right for spacing
 		translate(CARD_SIZE + CARD_SPACING, 0);
+		//working stack collision bounds
+		/*
 		if (stack.contains(mouseX, mouseY, index)) {
 			const leftX = minX(index);
 			const rightX = maxX(index);
@@ -167,7 +194,7 @@ function draw() {
 					pop();
 				}
 			}
-		}
+		}*/
 	});
 	pop();
 
@@ -203,6 +230,7 @@ function mousePressed() {
 			}
 		}
 	});
+	//no movement if card turning performed
 	if (turned) return;
 
 	//// turn draw stack and pickup from open stack
@@ -216,16 +244,51 @@ function mousePressed() {
 		//if draw stack empty: restore draw stack from open stack
 		if (drawStack.isEmpty()) {
 			const cards = openStack.remove(openStack.length());
-			//reversing to get "original" order
-			cards.reverse();
-			//make cards flipped again
-			cards.forEach(card => card.isVisible = false);
+			//reverse card order to get original order again
+			if (cards instanceof Array) {
+				cards.reverse();
+				//make cards flipped again
+				cards.forEach(card => {
+					card.isVisible = false;
+					/*card.animation = new Animation(
+						createVector(drawMaxX + CARD_SPACING, drawMinY),
+						createVector(drawMinX, drawMinY),
+						ANIMATION_TIME);*/
+				});
+			} else {
+				cards.isVisible = false;
+				/*cards.animation = new Animation(
+					createVector(drawMaxX + CARD_SPACING, drawMinY),
+					createVector(drawMinX, drawMinY),
+					ANIMATION_TIME);*/
+			}
 			console.log(cards, "restoring from open stack");
 			drawStack.add(cards);
 		} else {
-			const c = drawStack.remove(1);
-			c.isVisible = true;
+			//remove 3 cards: "Windows" solitaire mode
+			// COMBAK: adjustable amount of cards removed?
+			let c = drawStack.remove(3);
+			//reverse fixes errors with card order
+			if (c instanceof Array) {
+				c.reverse();
+				c = c.map(e => {
+					e.isVisible = true;
+					console.log(drawMaxX, drawMinY);
+					/*e.animation = new Animation(
+						createVector(drawMinX, drawMinY),
+						createVector(drawMaxX + CARD_SPACING, drawMinY),
+						ANIMATION_TIME);*/
+					return e;
+				});
+			} else {
+				c.isVisible = true;
+				/*c.animation = new Animation(
+					createVector(drawMinX, drawMinY),
+					createVector(drawMaxX + CARD_SPACING, drawMinY),
+					ANIMATION_TIME);*/
+			}
 			console.log(c, "drawn from draw stack");
+
 			openStack.add(c);
 		}
 	}
@@ -237,11 +300,14 @@ function mousePressed() {
 			mouseY >= drawMinY && mouseY <= drawMaxY) {
 			const c = openStack.remove(1);
 			console.log(c, "picked up from open stack");
+
 			carrierStack.add(c);
+			carrierStack.oldCardX = drawMinX;
+			carrierStack.oldCardY = drawMinY;
+			carrierStack.oldCardLocation = OPEN_STACK;
 			//store mouse position in relation to card position
 			mouseDeltaX = mouseX - drawMinX;
 			mouseDeltaY = mouseY - drawMinY;
-			carrierStack.oldCardLocation = OPEN_STACK;
 		}
 	}
 
@@ -266,8 +332,11 @@ function mousePressed() {
 					//add all cards to the carrier stack that are in front of this card
 					const pickupCards = stack.remove(cardIndex + 1);
 					console.log(pickupCards, "picked up at", cardIndex);
+
 					carrierStack.add(pickupCards);
 					carrierStack.oldCardLocation = index;
+					carrierStack.oldCardX = leftX;
+					carrierStack.oldCardY = upperY;
 
 					//store mouse position in relation to card position: difference between mouse position and top left card corner
 					mouseDeltaX = mouseX - leftX;
@@ -300,7 +369,6 @@ function mouseReleased() {
 
 		//animation setup: target is given
 		if (dropCards instanceof Array) {
-			console.log(dropCards.length);
 			dropCards.forEach((card, index) => {
 				//calculate original vector and target vector
 				let target = createVector(xpos,
@@ -359,7 +427,6 @@ function mouseReleased() {
 					mouseY <= maxY && mouseY >= minY) {
 					const finalCCard = carrierStack.cards[carrierStack.length() - 1];
 					const firstSCard = stack.cards[0];
-					console.log(finalCCard.value, firstSCard ? firstSCard.value : undefined);
 					//if stack is empty and last card is ace
 					if (stack.isEmpty()) {
 						if (finalCCard.value == 13) {
@@ -376,12 +443,38 @@ function mouseReleased() {
 			});
 		}
 
+		//no success: return cards to old location
 		if (!success) {
 			let dropCards = carrierStack.remove(carrierStack.length());
+			//removed from open stack: always only one card
 			if (carrierStack.oldCardLocation === OPEN_STACK) {
 				openStack.add(dropCards);
+				//animation
+				dropCards.animation = new Animation(
+					createVector(carrierStackX, carrierStackY),
+					createVector(carrierStack.oldCardX, carrierStack.oldCardY),
+					ANIMATION_TIME / 2);
 			} else {
 				stacks[carrierStack.oldCardLocation].add(dropCards);
+
+				//array: separate animation positions for every card
+				if (dropCards instanceof Array) {
+					dropCards.forEach((card, index) => {
+						//calculate original vector and target vector
+						let target = createVector(carrierStack.oldCardX,
+							carrierStack.oldCardY + index * CARD_SPACING * 2);
+						let original = createVector(carrierStackX,
+							carrierStackY + index * CARD_SPACING * 2);
+						card.animation = new Animation(original, target,
+							ANIMATION_TIME / 2);
+					});
+				} else {
+					//simple card: position only for this card
+					dropCards.animation = new Animation(
+						createVector(carrierStackX, carrierStackY),
+						createVector(carrierStack.oldCardX, carrierStack.oldCardY),
+						ANIMATION_TIME / 2);
+				}
 			}
 		}
 	}
@@ -408,7 +501,7 @@ function fromValueToCardProperties(value) {
 	} else if (value > 26 && value <= 39) {
 		returner[1] = cCol.HEARTS;
 	} else if (value > 39 && value <= 52) {
-		returner[1] = cCol.CROSSES;
+		returner[1] = cCol.SPADES;
 	}
 
 	//real card "value"
@@ -423,7 +516,7 @@ function fromValueToCardProperties(value) {
 		case cCol.HEARTS:
 			realVal = value - 26;
 			break;
-		case cCol.CROSSES:
+		case cCol.SPADES:
 			realVal = value - 39;
 			break;
 
@@ -439,6 +532,6 @@ function fromValueToCardProperties(value) {
 //returns true if one of the colors is a black color and the other one a red color
 const colorDiffer = (col1, col2) =>
 	//color one red and color two black
-	((col1 === cCol.DIAMONDS || col1 === cCol.HEARTS) && (col2 === cCol.CLUBS || col2 === cCol.CROSSES)) ||
+	((col1 === cCol.DIAMONDS || col1 === cCol.HEARTS) && (col2 === cCol.CLUBS || col2 === cCol.SPADES)) ||
 	//color two red and color one black
-	((col2 === cCol.DIAMONDS || col2 === cCol.HEARTS) && (col1 === cCol.CLUBS || col1 === cCol.CROSSES));
+	((col2 === cCol.DIAMONDS || col2 === cCol.HEARTS) && (col1 === cCol.CLUBS || col1 === cCol.SPADES));

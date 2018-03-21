@@ -18,6 +18,11 @@ class Stack {
 		} else if (count > 1) {
 			let returner = [];
 			for (let i = 0; i < count; i++) {
+				//empty while removing: might be a bug
+				if (this.isEmpty()) {
+					console.warn(languageData["w stack remove"] + count);
+					return returner;
+				}
 				//add current first card to beginning of returner
 				returner.push(this.cards.shift());
 			}
