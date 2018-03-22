@@ -48,18 +48,29 @@ function setup() {
 	document.getElementById("explanation").innerHTML = languageData["explanation"];
 	document.getElementById("by").innerHTML = languageData["by"];
 	document.getElementById("win").innerHTML = languageData["win"];
+	//set document language for acessibility
+	document.documentElement.setAttribute("lang", loadLang());
 	let stuff = document.getElementsByClassName("game-name");
 	for (let i = 0; i < stuff.length; ++i) {
 		stuff[i].innerHTML = languageData["game-name"];
 	}
 
+	//smartphone detection stuff
+	if (IS_MOBILE) {
+
+	}
 	createCanvas(700, 500);
+	document.body.appendChild(document.createElement("DIV"));
+
 	workingStackStartY = CARD_SIZE * 1.5 + CARD_SPACING * 2;
+	pixelDensity(1);
 
 	angleMode(DEGREES);
 
 	////prepare invisible buffer
 	invisibleBuffer = createGraphics(CARD_SIZE, CARD_SIZE * 1.5);
+	console.log(invisibleBuffer.width, CARD_SIZE, invisibleBuffer.height, CARD_SPACING);
+	invisibleBuffer.pixelDensity(1);
 	invisibleBuffer.background(0, 0);
 	//card rectangle
 	invisibleBuffer.fill(255);
@@ -230,8 +241,11 @@ function mousePressed() {
 			}
 		}
 	});
-	//no movement if card turning performed
-	if (turned) return;
+	//no movement or mouse action if card turning performed
+	if (turned) return false;
+
+	//for mouse stuff (see function end)
+	let actionPerformed = false;
 
 	//// turn draw stack and pickup from open stack
 	let drawMinX = CARD_SPACING,
@@ -241,6 +255,10 @@ function mousePressed() {
 	//300th bounds check -_-
 	if (mouseX >= drawMinX && mouseX <= drawMaxX &&
 		mouseY >= drawMinY && mouseY <= drawMaxY) {
+
+		//always is action
+		actionPerformed = true;
+
 		//if draw stack empty: restore draw stack from open stack
 		if (drawStack.isEmpty()) {
 			const cards = openStack.remove(openStack.length());
@@ -298,6 +316,9 @@ function mousePressed() {
 		drawMaxX += CARD_SIZE + CARD_SPACING;
 		if (mouseX >= drawMinX && mouseX <= drawMaxX &&
 			mouseY >= drawMinY && mouseY <= drawMaxY) {
+
+			actionPerformed = true;
+
 			const c = openStack.remove(1);
 			console.log(c, "picked up from open stack");
 
@@ -329,6 +350,8 @@ function mousePressed() {
 					mouseY >= upperY && mouseY <= lowerY &&
 					card.isVisible) {
 
+					actionPerformed = true;
+
 					//add all cards to the carrier stack that are in front of this card
 					const pickupCards = stack.remove(cardIndex + 1);
 					console.log(pickupCards, "picked up at", cardIndex);
@@ -351,7 +374,11 @@ function mousePressed() {
 	//set already picked up indicator at some later point
 	setTimeout(() => alreadyPickedUp = true, 100);
 
-	return false;
+	// Certain users (especially mobile) should or must be able to resize and
+	// scroll using the mouse/touches/similar. Therefore, we can't prevent
+	// default mouse clicking and releasing at any time.
+	// Solution: check if mouse was used and only if it was, prevent default behavior.
+	return !actionPerformed;
 }
 
 function mouseDragged() {

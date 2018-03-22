@@ -1,16 +1,19 @@
 ///// Constants
 
+//Detects mobile devices
+const IS_MOBILE = window.matchMedia("only screen and (max-width: 760px)");
+
 //Draw size of the cards
 const CARD_SIZE = 70;
 //Spacing in between the cards
 const CARD_SPACING = CARD_SIZE / 8;
 //Round corner size of the cards
-const CORNER_SIZE = 5;
+const CORNER_SIZE = 0;
 //Stripe spacing. Increase to make stripes more separate
 //Non-divisibles of the card size are recommended
 const STRIPE_SPACING = 11;
 //X Position of the final stacks
-const FINAL_POS = CARD_SIZE * 3;
+const FINAL_POS = CARD_SIZE * 4;
 
 //Number of "working" stacks at the bottom
 const STACK_COUNT = 7;

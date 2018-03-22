@@ -8,6 +8,7 @@ class Card {
 		this.normalBuffer = createGraphics(CARD_SIZE, CARD_SIZE * 1.5);
 
 		//draw preparation
+		this.normalBuffer.pixelDensity(1);
 		this.normalBuffer.angleMode(DEGREES);
 		this.normalBuffer.background(0, 0);
 		//draw background rectangle
