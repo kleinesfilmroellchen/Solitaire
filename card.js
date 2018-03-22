@@ -81,10 +81,10 @@ class Card {
 
 		//draw buffers on screen using image
 		if (this.isVisible) {
-			image(this.normalBuffer, 0, 0);
+			image(this.normalBuffer, 0, 0, CARD_SIZE, CARD_SIZE * 1.5);
 		} else {
 			//invisible buffer is global
-			image(invisibleBuffer, 0, 0);
+			image(invisibleBuffer, 0, 0, CARD_SIZE, CARD_SIZE * 1.5);
 		}
 
 		if (this.animation) {
